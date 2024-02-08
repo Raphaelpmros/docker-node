@@ -3,7 +3,7 @@ version: '3'
 services:
   node:
     build: .
-    container_name: node_2
+    container_name: node_3
     ports:
       - "3000:3000"
     volumes:
@@ -37,7 +37,7 @@ services:
       - nodenet
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db
+      MYSQL_DATABASE: products
 
 networks:
   nodenet:
