@@ -24,6 +24,10 @@ app.get('/dog', (req, res) => {
   res.send("WOLF")
 })
 
+app.get('products' (req, res) => {
+
+})
+
 app.listen(3000, () => {
   console.log("listening on port 3000")
 })
