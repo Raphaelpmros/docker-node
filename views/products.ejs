@@ -6,8 +6,7 @@
     <title>Products</title>
 </head>
 <body>
-
-    <h1>Product list: </h1>
+    <h1><%= category %> list: </h1>
     <section>
         <ul>
             <% for(let product of products) { %>
@@ -15,6 +14,9 @@
             <% } %>    
         </ul>
         <h3><a href="products/new">Add a new Product</a></h3>
+        <% if(category !== 'All'){ %> 
+            <button><a href="/products">Back to All Categories</a></button>
+        <% } %>
     </section>
     
 </body>
