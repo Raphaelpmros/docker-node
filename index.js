@@ -133,7 +133,6 @@ app.post("/products/:id/edit", async (req, res) => {
           return;
         }
 
-        // Redireciona para a página de detalhes do produto atualizado
         res.redirect('/products');
       }
     );
