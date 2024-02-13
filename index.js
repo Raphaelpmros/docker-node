@@ -49,10 +49,26 @@ app.get("/products/new", (req, res) => {
   res.render("new");
 })
 
-app.post('/products', (req, res) => {
-  const newProduct = new Product(req.body)
-  res.send('making your product')
-})
+app.post('/products', async (req, res) => {
+  try {
+    const { name, price, category } = req.body;
+    con.query(
+      `INSERT INTO products (name, price, category) VALUES (?, ?, ?)`,
+      [name, price, category],
+      function (err, result) {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Erro ao salvar o produto no banco de dados.');
+          return;
+        }
+        res.redirect('/products');
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro interno do servidor.');
+  }
+});
 
 app.get("/products/:id", async (req, res) => {
   try {
@@ -76,6 +92,56 @@ app.get("/products/:id", async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get("/products/:id/edit", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    con.query(`SELECT * FROM products WHERE id = '${id}'`, function (err, result) {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Erro ao buscar o produto no banco de dados.');
+        return;
+      }
+
+      if (result.length === 0) {
+        res.status(404).send('Produto não encontrado.');
+        return;
+      }
+
+      const product = result[0];
+      res.render("edit", { product });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro interno do servidor.');
+  }
+});
+
+app.post("/products/:id/edit", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, category } = req.body;
+
+    con.query(
+      `UPDATE products SET name = ?, price = ?, category = ? WHERE id = ?`,
+      [name, price, category, id],
+      function (err, result) {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Erro ao atualizar o produto no banco de dados.');
+          return;
+        }
+
+        // Redireciona para a página de detalhes do produto atualizado
+        res.redirect('/products');
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro interno do servidor.');
+  }
+}); 
 
 
 
